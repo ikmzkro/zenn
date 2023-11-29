@@ -51,7 +51,7 @@ parent = hash256(leftHash + rightHash)
 
 print(parent.hex())
 ```
-結果:
+出力:
 ```
 8b30c5ba100f6f2e5ad1e2a742e5020491240f8eb514fe97c713c31718ad7ecd
 ```
@@ -87,7 +87,7 @@ for i in range(0, len(hashes), 2):
 for item in parent_level:
     print(item.hex())
 ```
-結果:
+出力:
 ```
 8b30c5ba100f6f2e5ad1e2a742e5020491240f8eb514fe97c713c31718ad7ecd
 7f4e6f9e224e20fda0ae4c44114237f97cd35aca38d83081c9bfd41feb907800
@@ -120,7 +120,7 @@ while len(current_hashes) > 1:
     current_hashes = merkle_parent_level(current_hashes)
 print(current_hashes[0].hex())
 ```
-結果:
+出力:
 ```
 acbcab8bcc1af95d8d563b77d24c3d19b18f1486383d75a5085c4e86c86beed6
 ```
@@ -147,7 +147,7 @@ for depth in range(max_depth + 1):
 for level in merkle_tree:
     print(level)
 ```
-結果:
+出力:
 ```
 [None]
 [None, None]
@@ -189,7 +189,7 @@ tree.nodes[0] = merkle_parent_level(tree.nodes[1])
 
 print(tree)
 ```
-結果:
+出力:
 ```
 *597c4baf.*
 6382df3f..., 87cf8fa3...
@@ -232,7 +232,7 @@ while tree.root() is None:
             tree.up()
 print(tree)
 ```
-結果:
+出力:
 ```
 3ba6c080...
 272945ec..., 9a38d037...
@@ -269,7 +269,7 @@ while tree.root() is None:
             tree.up()
 print(tree)
 ```
-結果:
+出力:
 ```
 a779fe9f...
 272945ec..., bdca1c60...
