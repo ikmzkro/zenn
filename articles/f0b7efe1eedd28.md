@@ -2,8 +2,8 @@
 title: "Pythonで作るマークルツリー"
 emoji: "🌲"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["python", "solidity", "ethereum", "markletree", "crypto"]
-published: false
+topics: ["python", "markletree", "crypto"]
+published: true
 ---
 
 # マークルツリーとは何か
