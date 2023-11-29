@@ -286,14 +286,150 @@ a779fe9f...
 実装においては、再帰や明示的なスタックを使用して深さ優先探索を実現することが一般的です。
 
 # マークルルートを検証する
+これまでのコードでマークルツリーの構築が確認できました。本項では、これまでの知識を整理し、技術検証を進めます。
+
+:::details マークルルートの導出
+```py: verify.py
+class Tree:
+    def __init__(self, leaves):
+        self.leaves = [Node(leaf) for leaf in leaves]
+        self.layer  = self.leaves[::]
+        self.root   = None
+        self.build_tree()
+```
+入力:
+```
+block = ["あめ", "あめ", "みかん", "みかん", "みかん", "りんご", "りんご", "どーなっつ", "どーなっつ"]
+print(block)
+
+merkletree = Tree(block)
+
+merkle_root = merkletree.root
+print(merkle_root)
+```
+出力:
+```
+bf03b42cf8e4e8581e08c7595775dc2d9d79c34f9b95885a5d42df100786a218
+```
+:::
+このリストはブロック内のトランザクションに対するマークルパスであり、最終的に求まったマークルルートはウォレットにおいてそのブロック内の全トランザクションの整合性を検証するための重要な情報です。
+
+ウォレットがマークルツリーを用いてマークルルートを計算し、それがブロックヘッダのマークルルートと一致することを確認することで、ブロック内のトランザクションデータが改ざんされていないことを検証できます。これにより、ウォレットは効率的に自身の残高やトランザクションの整合性を確認することができます。
+
+:::details マークルパスの探索
+```py: verify.py
+def search(self, data):
+    target = None
+    hash_value = sha256(data.encode()).hexdigest()
+    for node in self.leaves:
+        if node.hash == hash_value:
+            target = node
+    return target
+
+def get_pass(self, data):
+    target = self.search(data)
+    markle_pass = []
+    if not(target):
+        return
+    markle_pass.append(target.hash)
+    while target.parent:
+        sibling = target.sibling
+        markle_pass.append((sibling.hash, sibling.position))
+        target = target.parent
+    return markle_pass   
+```
+入力:
+```
+merkle_pass = merkletree.get_pass("みかん")
+print(merkle_pass)
+```
+出力:
+```
+['1cbe93b936a4bd4d40c2224462023917cd77c962376feb9128d9e569c9856aaf', ('4261abfc91324dc5319312592125610a16b0b0a996fcdfae1d24766b918afae9', 'right'), ('0a6b2aa3a1fc41a9394c48adbf1cb1c3eb3e3a9db975906fb743308f23e1f15b', 'right'), ('2165f2270bbe8ce292395df14cb4e65e271fe608013c018d6b5864ec9f1865c8', 'left'), ('94f4c2ba6d697dc41109e2194343bf721e2bbc5de48068609578c0f4ba5481ed', 'right')]
+```
+:::
+merkle_pass を求めると"みかん"ノードからマークルツリーのルートまでの経路が示されます。このマークルパスを使うことで、特定のデータがマークルツリー内で正当な位置にあることを検証できます。
+
+0. `1cbe93b936a4bd4d40c2224462023917cd77c962376feb9128d9e569c9856aaf`: "みかん"ノードのハッシュ値
+1. `('4261abfc91324dc5319312592125610a16b0b0a996fcdfae1d24766b918afae9', 'right')`: "みかん"ノードの親ノードの右側にある兄弟ノードのハッシュ値とその位置情報。"みかん"ノードとその兄弟ノード（右側のノード）のハッシュを連結して親ノードを作り、そのハッシュがこの要素になります。
+2. `('0a6b2aa3a1fc41a9394c48adbf1cb1c3eb3e3a9db975906fb743308f23e1f15b', 'right')`: これは上記のノード（親ノードの右側のノード）の親ノードの右側にある兄弟ノードのハッシュ値とその位置情報です。同様に、ハッシュを連結して親ノードを作り、そのハッシュがこの要素になります。
+3. `('2165f2270bbe8ce292395df14cb4e65e271fe608013c018d6b5864ec9f1865c8', 'left')`: 同様の説明で、これは上記ノードの親ノードの左側にある兄弟ノードのハッシュ値とその位置情報です。
+4. `('94f4c2ba6d697dc41109e2194343bf721e2bbc5de48068609578c0f4ba5481ed', 'right')`: 同様の説明で、これは上記ノードの親ノードの右側にある兄弟ノードのハッシュ値とその位置情報です。
+
+これらの要素をたどることで、"みかん" ノードからマークルツリーのルートノードまでの経路が示されます。
+
+:::details マークルパスの検証
+```py: verify.py
+def caluculator(markle_pass):
+    value = markle_pass[0]
+    for node in markle_pass[1:]:
+        sib = node[0]
+        position = node[1]
+        if position == "right":
+            value = sha256(value.encode() + sib.encode()).hexdigest()
+        else:
+            value = sha256(sib.encode() + value.encode()).hexdigest()
+    return value   
+```
+入力:
+```
+candidate = caluculator(merkle_pass)
+print(candidate)
+```
+出力:
+```
+bf03b42cf8e4e8581e08c7595775dc2d9d79c34f9b95885a5d42df100786a218
+```
+:::
+マークルツリーとそのマークルパスを使用してトランザクションの整合性を確認し、最終的にマークルルートが一致することで改ざんが行われていないことを検証できました。
+これにより、軽量クライアントやウォレットは全体のブロックチェーンデータを保持せずに、特定のトランザクションの整合性を確認することができるというメリットがあります。
 
 
+:::details マークルパスの検証
+```py: verify.py
+def caluculator(markle_pass):
+    value = markle_pass[0]
+    for node in markle_pass[1:]:
+        sib = node[0]
+        position = node[1]
+        if position == "right":
+            value = sha256(value.encode() + sib.encode()).hexdigest()
+        else:
+            value = sha256(sib.encode() + value.encode()).hexdigest()
+    return value   
+```
+入力:
+```
+block = ["あめ", "あめ", "みかん", "みかん", "りんご", "りんご", "どーなっつ", "どーなっつ"]
+print(block)
+
+merkletree = Tree(block)
+
+merkle_pass = merkletree.get_pass("みかん")
+print(merkle_pass)
+
+candidate = caluculator(merkle_pass)
+print(candidate)
+
+merkle_root = merkletree.root
+print(merkle_root)
+```
+出力:
+```
+['あめ', 'あめ', 'みかん', 'みかん', 'りんご', 'りんご', 'どーなっつ', 'どーなっつ']
+['1cbe93b936a4bd4d40c2224462023917cd77c962376feb9128d9e569c9856aaf', ('1cbe93b936a4bd4d40c2224462023917cd77c962376feb9128d9e569c9856aaf', 'left'), ('aa280a624da2b88334623a7033f5a6eac1da7012ace335a6366828f59377ed1b', 'left'), ('4d8a97b9474b34c013c92ba1662bb98ae8cab97681ae21b9843db45ee2854730', 'right')]
+b8cc63db762632990e49bea7832293ae2d18cff643c78c1e2274c7fcf757354a
+b8cc63db762632990e49bea7832293ae2d18cff643c78c1e2274c7fcf757354a
+```
+:::
+最後にブロックの内容を改ざんしてみて、それによってマークルツリーの整合性が損なわれ、マークルルートが異なることを確認してみます。
+みかんを1つ食べて要素を1つ少なくします。
+マークルツリーからマークルパスを取得し、マークルルートを算出すると、改ざん前のツリーのマークルルートと異なる事が確認できます。
+
+- 改ざん前: `bf03b42cf8e4e8581e08c7595775dc2d9d79c34f9b95885a5d42df100786a218`
+- 改ざん後: `b8cc63db762632990e49bea7832293ae2d18cff643c78c1e2274c7fcf757354a`
 
 # 参考
-https://bitcoin.org/bitcoin.pdf
-https://books.google.co.jp/books/about/%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0_%E3%83%93%E3%83%83%E3%83%88%E3%82%B3%E3%82%A4%E3%83%B3.html?id=FagHzgEACAAJ&source=kp_book_description&redir_esc=y
 https://github.com/learn-co-students/session7-jsong-programming-blockchain-demo/blob/master/index.ipynb
-https://alis.to/mozk/articles/3PYokoOWP7XY
+https://zenn.dev/sakuracase/articles/4f58609f3da6e8
 https://alis.to/gaxiiiiiiiiiiii/articles/3dy7vLZn0g89
-https://github.com/sskgik/merkletree_with_python/blob/main/merkletree.py
-https://github.com/sskgik/Merkletree/blob/master/Program.cs
