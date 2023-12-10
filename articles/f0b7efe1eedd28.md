@@ -2,7 +2,7 @@
 title: "Pythonで作るマークルツリー"
 emoji: "🌲"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["python", "markletree", "crypto"]
+topics: ["python", "merkletree", "crypto"]
 published: true
 ---
 
