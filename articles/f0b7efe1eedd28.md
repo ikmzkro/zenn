@@ -1,10 +1,13 @@
 ---
-title: "Pythonで作るマークルツリー"
+title: "Pythonでたどるマークルツリーの理論"
 emoji: "🌲"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["python", "merkletree", "crypto"]
 published: true
 ---
+
+# 本記事について
+Pythonを使用して、ブロックチェーンの基本技術であるマークルツリーの理論的な理解を進めていきます。
 
 # マークルツリーとは何か
 ## マークルツリーの基本概念
