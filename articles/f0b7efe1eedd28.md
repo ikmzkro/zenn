@@ -3,7 +3,7 @@ title: "Pythonでたどるマークルツリーの理論"
 emoji: "🌲"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["python", "merkletree", "crypto"]
-published: true
+published: false
 ---
 
 # 本記事について
