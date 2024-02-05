@@ -2,8 +2,8 @@
 title: "マークルツリー"
 emoji: "🌲"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["python", "merkletree", "crypto"]
-published: false
+topics: ["solidity", "ethereum","python", "merkletree", "crypto"]
+published: true
 ---
 
 # 作ったもの
