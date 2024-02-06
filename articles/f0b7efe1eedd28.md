@@ -2,7 +2,7 @@
 title: "マークルツリーによるホワイトリスト付きERC721コントラクトの実装"
 emoji: "🌲"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["solidity", "ethereum", "nft". "python", "merkletree", "crypto"]
+topics: ["solidity", "ethereum", "nft", "python", "merkletree", "crypto"]
 published: true
 ---
 
