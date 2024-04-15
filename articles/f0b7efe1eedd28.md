@@ -1,8 +1,8 @@
 ---
-title: "マークルツリー"
+title: "マークルツリーERC721コントラクト"
 emoji: "🌲"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["solidity", "ethereum","python", "merkletree", "crypto"]
+topics: ["solidity", "ethereum", "nft", "python", "merkletree", "crypto"]
 published: true
 ---
 
