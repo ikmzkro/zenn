@@ -10,3 +10,9 @@ $ npx zenn new:book
 
 👇  投稿をプレビューする
 $ npx zenn preview
+
+
+
+Next...
+- バリデータノード運用
+- サッカーベットコントラクト
