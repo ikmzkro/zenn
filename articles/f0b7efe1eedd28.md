@@ -7,7 +7,7 @@ published: true
 ---
 
 # 作ったもの
-https://github.com/ikmzkRo/WLAQ-mint
+https://github.com/ikmzkro/contracts/blob/main/contracts/ERC721/WLAQ.sol
 
 # どんな機能？
 NFTを発行する際、複数のアドレスがいくつまで発行可能かを明示したホワイトリストを作成します。このホワイトリストに登録されたアドレスに基づいてNFTが発行可能となるよう、マークルツリーの技術を駆使して制御を行います。
