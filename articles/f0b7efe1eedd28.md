@@ -1,5 +1,5 @@
 ---
-title: "マークルツリーERC721コントラクト"
+title: "ERC721コントラクトの認証を強化するためのMerkle Treeの活用法"
 emoji: "🌲"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["solidity", "ethereum", "nft", "python", "merkletree", "crypto"]
@@ -718,6 +718,7 @@ https://zenn.dev/0xywzx/articles/bdb6c991f3fc8b
 
 # 参考
 https://dev.to/peterblockman/understand-merkle-tree-by-making-a-nft-minting-whitelist-1148#validate-data-using-merkle-tree
+https://smacon.dev/posts/merkle-tree/
 https://github.com/learn-co-students/session7-jsong-programming-blockchain-demo/blob/master/index.ipynb
 https://zenn.dev/sakuracase/articles/4f58609f3da6e8
 https://alis.to/gaxiiiiiiiiiiii/articles/3dy7vLZn0g89
