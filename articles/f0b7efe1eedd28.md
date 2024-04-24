@@ -1,5 +1,5 @@
 ---
-title: "ERC721コントラクトの認証を強化するためのMerkle Treeの活用法"
+title: "ERC721コントラクトのセキュリティを向上させるMerkle Treeの活用法"
 emoji: "🌲"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["solidity", "ethereum", "nft", "python", "merkletree", "crypto"]
