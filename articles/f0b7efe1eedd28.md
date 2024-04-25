@@ -2,7 +2,7 @@
 title: "【マークルツリー】発行先アドレスと発行数を制御したERC721コントラクト"
 emoji: "🌲"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["solidity", "ethereum", "nft", "python", "merkletree", "crypto"]
+topics: ["solidity", "ethereum", "python", "merkletree", "crypto"]
 published: true
 ---
 
@@ -10,9 +10,7 @@ published: true
 https://github.com/ikmzkro/contracts/blob/main/contracts/ERC721/WLAQ.sol
 
 # どんな機能？
-今回はウォレットアドレスとトークン発行数を特定のホワイトリストで管理するスマートコントラクトを実装しました。
-
-各アドレスに対してNFTをいくつまで発行可能かを明示したホワイトリストを作成し、このリストに基づいてNFTが発行可能となるようマークルツリーの技術を駆使して制御を行います。
+今回は各ウォレットアドレスに対するトークン発行数を特定のホワイトリストで管理するスマートコントラクトを実装しました。それぞれのアドレスに対し、NFTの発行可能な数を明示したホワイトリストを作成し、このリストに基づいてNFTの発行を制御するためにマークルツリーの技術を利用しました。
 
 # マークルツリーとは何か
 まずはブロックチェーンの基本技術であるマークルツリーの理論的な理解をPythonを使用して進めていきます。
