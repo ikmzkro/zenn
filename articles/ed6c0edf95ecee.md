@@ -86,6 +86,26 @@ https://kb.beaconcha.in/ethereum-staking/deposit-process
   - 2048 x 12秒 = 24,576秒 = 409.6分 = 約6.82時間
   - 64 x 6.4分 = 409.6分 = 約6.82時間
 
+### Deposit Invalid
+
+### Pending
+ビーコンチェーンからデポジットにアクセスできるようになり、Queueに並びます。
+Mempoolでガス代に応じて待機時間が短くなったように、Queueでは合計デポジット額に応じて待機時間は短くなります。
+1epochで8バリデータをアクティブ化することができるため、6.4minで8バリデータなので、1日あたり1800バリデータをアクティブ化できます。
+
+### Active Offline
+
+### Active
+ACTIVEになったバリデータはステーキングを実施しブロックの提案や証明書への署名を行い投票によりETHを獲得する可能性を秘めます。
+
+
+
+### Exiting Online
+### Exiting Offline
+### Slashing Online
+### Slashing Offline
+### Slashed
+### Exited
 
 
 # Withdraw Credential
