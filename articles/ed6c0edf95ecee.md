@@ -1,8 +1,8 @@
 ---
-title: "【Ethereum Staking】StakerとDeposit Contractを仲介する入出金鍵の役割"
-emoji: "🔑"
+title: "【Ethereum Staking】"
+emoji: "🥩"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: []
+topics: ["ethereum", "crypto"]
 published: false
 ---
 
@@ -25,7 +25,7 @@ POSに参加するためには、Stakerが32ETHをDeposit Contractに入金し�
 
 ちなみにConsensu LayerとExecution layerで発生した報酬をそれぞれCL報酬、EL報酬と呼びます。
 
-# Ethereum Stakingで扱う鍵
+# StakerとDeposit Contractを仲介する入出金鍵の役割
 鍵にはValidator KeyとWithdraw Keyの２種類あり、それぞれにPrivate Key(秘密鍵)とPublic Key(公開鍵)が存在します。
 
 鍵生成の全体像は下記のようになります。
@@ -43,7 +43,7 @@ POSに参加するためには、Stakerが32ETHをDeposit Contractに入金し�
 鍵管理に関しては注意する必要があり、仮に流出した場合はスラッシングリスクを意図的に負うことやバリデータキーの解除をすることで
 DepositContractに預けた残高を減額、アクセス不可とされる可能性があります。
 
-バリデーターの公開鍵はDeposit data (tx)に含めることでバリデーターを識別させるような役割を担います。
+バリデーターの公開鍵はDeposit data (tx)に含めることでバリデーターを識別させるような役割を担います
 
 ## Withdraw Key
 バリデーター出金キーは出金用秘密鍵、出金用公開鍵の２つで構成されます。
@@ -54,7 +54,38 @@ DepositContractに預けた残高を減額、アクセス不可とされる可�
 ただし、Withdraw Keyは旧概念であり現在は`Withdraw Credential`と呼ばれる引出認証情報を元にステークしたETHを出金するプロセルを取ります。
 つまり出金時に出金用秘密鍵で署名生成を行うフローは不要です。
 
-### The Merge
+# 32ETHをDeposit Contractに投げてからValidatorが稼動するまで
+Validatorがネットワーク内で稼働するまでの流れは下記のようになります。
+
+![](https://storage.googleapis.com/zenn-user-upload/bd37fef8c9f3-20240425.png)
+
+https://kb.beaconcha.in/ethereum-staking/deposit-process
+
+各ステータスはざっくりとUnknown⇒Deposited⇒Pending⇒Activeに分類できます。
+詳細なステータスになるとDeposit Invalid、Active Offline、Exiting Online、Exiting Offline、Slashing Online、Slashing Offline、Slashed、Exitedとなります。
+
+
+1. StakerはValidator Private Keyを生成し保持します
+2. 32ETHを入金するDeposit txをDeposit Contractに投げます
+3. このtxはMempoolに待機します
+4. Deposit txがブロックに含まれる
+5. Validator QueueにValidatorが待機します
+6. Beaconchainに承認されます
+
+# Withdraw Credential
+Withdraw CredentialはStakerが32ETHをDeposit Contractに入金する際に指定する引出認証情報です。
+Deposit Contractに送信するWithdrawal Credentialsにはprefixとして0x00と0x01のいずれかが組み込まれます。
+
+0x00は旧式のWithdrawal Credentialsを示し、0x00にBLS公開鍵のハッシュが後続する形式をとります。
+0x01はバリデータが正しく引出鍵を設定していることを示し、0x01に11byteのゼロとEthereumAddressが後続する形式をとります。
+
+旧式(0x00)のままでは正しく引出アドレスを設定できていないため、Copella upgrades以降はBLSToExecutionChangeをコールし0x00から0x01に移行するマイグレーションを実行する必要があります。
+引出アドレスはEOAもCAも両方指定可能らしいです。
+
+Withdraw Credentialは一度設定しまうと更新不可能となるため、Stakerとなる際に用意がひつようになる。
+仮に更新したい場合はValidatorを停止した後、預け入れたETHを全額引き出した後再度デポジットさせる必要があります。
+
+## The Merge
 冒頭にも説明したConsensus LayerとExecution layerの統一化をThe Mergeと呼び、下記変更がありました。
 - Shanghai upgrades: 主にEthereumのEL(Execution Layer)を対象とした更新(EIP-4895)
 - Copella upgrades: 主にEthereumのCL(Consensus Layer)を対象とした更新
@@ -68,18 +99,7 @@ partialはポジション（初期投資額32ETH+報酬額）のうち報酬額�
 一方でfullはポジション（初期投資額32ETH+報酬額）全額を引き出すことができます。
 バリデータノードが自主的にネットワークから退出する、もしくはSlashingというペナルティを犯した場合に引出鍵へのアクセスが可能となります。
 
-### Withdraw Credential
-Withdraw CredentialはStakerが32ETHをDeposit Contractに入金する際に指定する引出認証情報です。
-Deposit Contractに送信するWithdrawal Credentialsにはprefixとして0x00と0x01のいずれかが組み込まれます。
 
-0x00は旧式のWithdrawal Credentialsを示し、0x00にBLS公開鍵のハッシュが後続する形式をとります。
-0x01はバリデータが正しく引出鍵を設定していることを示し、0x01に11byteのゼロとEthereumAddressが後続する形式をとります。
-
-旧式(0x00)のままでは正しく引出アドレスを設定できていないため、Copella upgrades以降はBLSToExecutionChangeをコールし0x00から0x01に移行するマイグレーションを実行する必要があります。
-引出アドレスはEOAもCAも両方指定可能らしいです。
-
-Withdraw Credentialは一度設定しまうと更新不可能となるため、Stakerとなる際に用意がひつようになる。
-仮に更新したい場合はValidatorを停止した後、預け入れたETHを全額引き出した後再度デポジットさせる必要があります。
 
 # ref
 https://kb.beaconcha.in/ethereum-staking/ethereum-2-keys
