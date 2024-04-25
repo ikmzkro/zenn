@@ -1,5 +1,5 @@
 ---
-title: "【Ethereum Staking】StakerからDeposit Contractへの入出金プロセス"
+title: "【Ethereum Staking】ERC20で投票するStakingコントラクト"
 emoji: "🥩"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["ethereum", "crypto"]
@@ -73,53 +73,20 @@ https://kb.beaconcha.in/ethereum-staking/deposit-process
 △: また、2-3までの間に、 Signed Voluntary Exit transaction data (Validatorがずっとオフラインであったり、Validatorが悪意ある行動をした際にネットワークに送信する、署名済みの全額引き出しtx)を取得しておく必要がある。
 
 ## Validatorのステータス
-### Unknown
-署名されたDeposit TxがMempool(待機室)に滞留した状態。
-指定したガス代が高ければ待機時間は短くなる
-
-### Deposited
-一度でもDepositContractにDepositTxが取り込まれるとバリデータのステータスはUnknownからDepositedに遷移しますが、下記理由により最低でも13.6時間かかります。
-
-- validatorは1slot = 12secで1block作成する
-- validatorは1epoch(slotよりもlongtermな単位) = 32slot = 32blockを生成するまで384sec=6.4minかかる
-- 2048block+64epoch待機した後、beaconChainがDepositを認識する。
-  - 2048 x 12秒 = 24,576秒 = 409.6分 = 約6.82時間
-  - 64 x 6.4分 = 409.6分 = 約6.82時間
-
-### Deposit Invalid
-トランザクションには無効なBLS署名があった状態です。
-
-### Pending
-ビーコンチェーンからデポジットにアクセスできるようになり、Queueに並びます。
-Mempoolでガス代に応じて待機時間が短くなったように、Queueでは合計デポジット額に応じて待機時間は短くなります。
-1epochで8バリデータをアクティブ化することができるため、6.4minで8バリデータなので、1日あたり1800バリデータをアクティブ化できます。
-
-### Active
-ACTIVEになったバリデータはステーキングを実施しブロックの提案や証明書への署名を行い投票によりETHを獲得する可能性を秘めます。
-
-### Active Offline
-ACTIVEになったにも関わらずバリデータが2epoch=12.8minの間オフライン状態になりブロックの提案や証明を行っていない状態です。
-
-### Exiting Online
-下記理由によりバリデータはオンラインだがネットワークから退出している最中の状態です。
-1. Deposit Contractに預けた資金が16ETHを下回り強制退場となった場合（Slashing, Penaltyにより減額され続けた等）
-2. バリデータ側は自主的にステーキングをやめる自主退場の場合
-
-### Exiting Offline
-上記のオフラインバージョンです
-
-### Slashing Online
-バリデータはオンラインですが、悪意のあるペナルティ行為があったため、ネットワークから強制終了された状態です。
-これは1epochないで同じブロックに投票するなどの違反行為をさします。
-
-### Slashing Offline
-上記のオフラインバージョンです。また、バリデータは最低限25分間待機Queueに並ぶことになります。しかしSlashingによりペナルティを受け減額された後ですのでStaking額が減り待機時間は以前よりも長くなります。
-
-### Slashed
-度重なるペナルティを犯した場合、バリデータがネットワークから追い出された状態です。DepositContractに預けた資金は 36 日後に引き出すことができます。
-
-### Exited
-バリデータがネットワークから離脱した状態です。DepositContractに預けた資金は 1 日後に引き出し可能になります。
+| ステータス                  | 説明                                                |
+| -------------------------  | --------------------------------------------------- |
+| `Unknown`                  | 署名されたDeposit TxがMempool(待機室)に滞留した状態。指定したガス代が高ければ待機時間は短くなる  |
+| `Deposited `               | 一度でもDepositContractにDepositTxが取り込まれるとバリデータのステータスはUnknownからDepositedに遷移しますが、下記理由により最低でも`13.6時間`かかります。validatorは1slot=12secで1block作成するので、validatorは1epoch(slotよりもlongtermな単位)=32slot=32blockを生成するまで384sec=6.4minかかります。2048block+64epoch待機した後、beaconChainがDepositを認識するため、(2048 x 12秒 = 24,576秒 = 409.6分 = 約6.82時間) + (64 x 6.4分 = 409.6分 = 約6.82時間) 13.6時間となります。|
+| `Deposit Invalid` | トランザクションには無効なBLS署名があった状態です。 |
+| `Pending` | ビーコンチェーンからデポジットにアクセスできるようになり、Queueに並びます。Mempoolでガス代に応じて待機時間が短くなったように、Queueでは合計デポジット額に応じて待機時間は短くなります。1epochで8バリデータをアクティブ化することができるため、6.4minで8バリデータなので、1日あたり1800バリデータをアクティブ化できます。 |
+| `Active` | ACTIVEになったバリデータはステーキングを実施しブロックの提案や証明書への署名を行い投票によりETHを獲得する可能性を秘めます。|
+| `Active Offline` | ACTIVEになったにも関わらずバリデータが2epoch=12.8minの間オフライン状態になりブロックの提案や証明を行っていない状態です。|
+| `Exiting Online` | 下記理由によりバリデータはオンラインだがネットワークから退出している最中の状態です。①Deposit Contractに預けた資金が16ETHを下回り強制退場となった場合（Slashing, Penaltyにより減額され続けた等）②バリデータ側は自主的にステーキングをやめる自主退場の場合 |
+| `Exiting Offline` | `Exiting Online`のオフラインバージョンです |
+| `Slashing Online` | バリデータはオンラインですが、悪意のあるペナルティ行為があったため、ネットワークから強制終了された状態です。これは1epochないで同じブロックに投票するなどの違反行為をさします。 |
+| `Slashing Offline` | `Slashing Online`のオフラインバージョンです。また、バリデータは最低限25分間待機Queueに並ぶことになります。しかしSlashingによりペナルティを受け減額された後ですのでStaking額が減り待機時間は以前よりも長くなります。 |
+| `Slashed` | 度重なるペナルティを犯した場合、バリデータがネットワークから追い出された状態です。DepositContractに預けた資金は 36 日後に引き出すことができます。|
+| `Exited` | バリデータがネットワークから離脱した状態です。DepositContractに預けた資金は 1 日後に引き出し可能になります。 |
 
 # Withdraw Credential
 Withdraw CredentialはStakerが32ETHをDeposit Contractに入金する際に指定する引出認証情報です。
