@@ -50,26 +50,43 @@ DepositContractに預けた残高を減額、アクセス不可とされる可�
 鍵の役割は下記のようになります。
 ![](https://storage.googleapis.com/zenn-user-upload/7fc0b73a84bc-20240425.png)
 
-ただし、Withdraw Keyは旧概念であり現在は`Withdraw Credential`と呼ばれる引出認証情報を元にステークしたETHを出金するプロセルを取ります。
-つまり出金時に出金用秘密鍵で署名生成を行うフローは不要です。
+ただし、Withdraw Keyは旧概念であり現在は`Withdraw Credential`と呼ばれる引出認証情報を元にステークしたETHを出金するプロセルを取ります。つまり出金時に出金用秘密鍵で署名生成を行うフローは不要です。
 
 # 32ETHをDeposit Contractに投げてからValidatorが稼動するまで
 Validatorがネットワーク内で稼働するまでの流れは下記のようになります。
 
 ![](https://storage.googleapis.com/zenn-user-upload/bd37fef8c9f3-20240425.png)
-
 https://kb.beaconcha.in/ethereum-staking/deposit-process
 
-各ステータスはざっくりとUnknown⇒Deposited⇒Pending⇒Activeに分類できます。
-詳細なステータスになるとDeposit Invalid、Active Offline、Exiting Online、Exiting Offline、Slashing Online、Slashing Offline、Slashed、Exitedとなります。
+## Stakingできるようになるまでの処理フロー
+1. Validator Keyの秘密鍵をValidator Client側で生成
+2. 32ETH以上を保持したEOAでDepositTxを生成しDeposit Contractにbroadcast
+    1. txData(預金額、Withdraw Credential、ブロック作成時のTx手数料受取アドレス)を作成する。
+    2. △: Validator Keyの公開鍵で署名しValidator Keyの公開鍵を取引データに含める
+    3. △: 32ETH以上持っているアドレスでDeposit Txに署名する
+3. Deposit txがブロックに取り込まれる
+4. △: 最大4時間まつ
+5. Deposit Queueに並ぶ。
+6. Validatorの稼働状況がACTIVEになる
 
 
-1. StakerはValidator Private Keyを生成し保持します
-2. 32ETHを入金するDeposit txをDeposit Contractに投げます
-3. このtxはMempoolに待機します
-4. Deposit txがブロックに含まれる
-5. Validator QueueにValidatorが待機します
-6. Beaconchainに承認されます
+△: また、2-3までの間に、 Signed Voluntary Exit transaction data (Validatorがずっとオフラインであったり、Validatorが悪意ある行動をした際にネットワークに送信する、署名済みの全額引き出しtx)を取得しておく必要がある。
+
+## Validatorのステータス
+### Unknown
+署名されたDeposit TxがMempool(待機室)に滞留した状態。
+指定したガス代が高ければ待機時間は短くなる
+
+### Deposited
+一度でもDepositContractにDepositTxが取り込まれるとバリデータのステータスはUnknownからDepositedに遷移しますが、下記理由により最低でも13.6時間かかります。
+
+- validatorは1slot = 12secで1block作成する
+- validatorは1epoch(slotよりもlongtermな単位) = 32slot = 32blockを生成するまで384sec=6.4minかかる
+- 2048block+64epoch待機した後、beaconChainがDepositを認識する。
+  - 2048 x 12秒 = 24,576秒 = 409.6分 = 約6.82時間
+  - 64 x 6.4分 = 409.6分 = 約6.82時間
+
+
 
 # Withdraw Credential
 Withdraw CredentialはStakerが32ETHをDeposit Contractに入金する際に指定する引出認証情報です。
@@ -102,3 +119,4 @@ partialはポジション（初期投資額32ETH+報酬額）のうち報酬額�
 https://kb.beaconcha.in/ethereum-staking/ethereum-2-keys
 https://mainnet.earthether.org/en/withdrawals
 https://www.youtube.com/watch?v=RwwU3P9n3uo
+https://kb.beaconcha.in/ethereum-staking/deposit-process
