@@ -127,6 +127,59 @@ Withdraw Queueに入り５日待機するば引き出しが完了する、同じ
 
 # Stakerへの報酬と罰則
 
+https://kb.beaconcha.in/ethereum-staking/rewards-and-penalties
+
+https://zenn.dev/mizuneko4345/scraps/ca1ba05bf94bce
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Beacon Chainを認証するPOSの参加者（Validator）の動き
+
+
+
+https://kb.beaconcha.in/ethereum-staking/attestation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -143,8 +196,14 @@ https://solidity-by-example.org/hacks/re-entrancy/
 
 
 
+
+# EigenLayerへのアプローチ
+
 # ref
+https://kb.beaconcha.in/ethereum-staking/glossary
 https://kb.beaconcha.in/ethereum-staking/ethereum-2-keys
 https://mainnet.earthether.org/en/withdrawals
 https://www.youtube.com/watch?v=RwwU3P9n3uo
 https://kb.beaconcha.in/ethereum-staking/deposit-process
+https://kb.beaconcha.in/ethereum-staking/rewards-and-penalties
+https://kb.beaconcha.in/ethereum-staking/attestation
