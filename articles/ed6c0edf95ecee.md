@@ -134,19 +134,47 @@ Deposit Contractに送信するWithdrawal Credentialsにはprefixとして0x00�
 Withdraw Credentialは一度設定しまうと更新不可能となるため、Stakerとなる際に用意がひつようになる。
 仮に更新したい場合はValidatorを停止した後、預け入れたETHを全額引き出した後再度デポジットさせる必要があります。
 
-## The Merge
-冒頭にも説明したConsensus LayerとExecution layerの統一化をThe Mergeと呼び、下記変更がありました。
+
+The Merge＝Consensus LayerとExecution layerの統一化により下記変更がありました。
 - Shanghai upgrades: 主にEthereumのEL(Execution Layer)を対象とした更新(EIP-4895)
 - Copella upgrades: 主にEthereumのCL(Consensus Layer)を対象とした更新
 
-これらのShanghai/Capella以降、withdrawalsはpartial, fullの２種類存在します。
+これらのShanghai/Capella以降、withdrawalsはpartial, fullの２種類が存在します。
 
-partialはポジション（初期投資額32ETH+報酬額）のうち報酬額のみを引き出すことができます。
-しかし、引出額や引出タイミングは指定できません。
-これは、定期的に残高を監視し報酬額を引出鍵に自動送金する仕組みとなっているためです。
+partialはポジション（初期投資額32ETH+報酬額）のうち報酬額のみを全額引き出すことができます。
+しかし、引出額や引出タイミングは指定できません。これは、Withdraw addressという引出アドレスを設定すれば、プロトコルレベルで定期的に残高を監視し報酬額を引出鍵に自動送金する仕組みとなっているためです。
+
+△Voluntary Withdraw＝Fullかな
+1ブロックあたりPartial WithdrawやVoluntary Withdrawのtxは16件存在し、Tx手数料は一切かからないらしい
 
 一方でfullはポジション（初期投資額32ETH+報酬額）全額を引き出すことができます。
 バリデータノードが自主的にネットワークから退出する、もしくはSlashingというペナルティを犯した場合に引出鍵へのアクセスが可能となります。
+
+Active Validatorから抜けだすイグジットメッセージを送る
+Exit Queueの最後尾に並び承認を〇
+1epochで最大7Validator, １日あたる1,575Validator退出可能、このプロセスでも報酬は発生している
+通常自主的な退出であれば１日以降で引出可能になる
+Withdraw Queueに入り５日待機するば引き出しが完了する、同じくトランザクション手数料は一切かからない。
+
+
+
+# Stakerへの報酬と罰則
+
+
+
+
+
+
+
+# Stakingコントラクト
+
+## Re-Entrancy
+動作確認用にETHを入出金するコントラクトで脆弱性を検証してみます。
+
+https://solidity-by-example.org/hacks/re-entrancy/
+
+
+
 
 # ref
 https://kb.beaconcha.in/ethereum-staking/ethereum-2-keys
