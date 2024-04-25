@@ -1,5 +1,5 @@
 ---
-title: "マークルツリーを用いたERC721コントラクト"
+title: "【マークルツリー】発行先アドレスと発行数を制御したERC721コントラクト"
 emoji: "🌲"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["solidity", "ethereum", "nft", "python", "merkletree", "crypto"]
