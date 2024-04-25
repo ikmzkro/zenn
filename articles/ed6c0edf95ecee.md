@@ -87,26 +87,39 @@ https://kb.beaconcha.in/ethereum-staking/deposit-process
   - 64 x 6.4分 = 409.6分 = 約6.82時間
 
 ### Deposit Invalid
+トランザクションには無効なBLS署名があった状態です。
 
 ### Pending
 ビーコンチェーンからデポジットにアクセスできるようになり、Queueに並びます。
 Mempoolでガス代に応じて待機時間が短くなったように、Queueでは合計デポジット額に応じて待機時間は短くなります。
 1epochで8バリデータをアクティブ化することができるため、6.4minで8バリデータなので、1日あたり1800バリデータをアクティブ化できます。
 
-### Active Offline
-
 ### Active
 ACTIVEになったバリデータはステーキングを実施しブロックの提案や証明書への署名を行い投票によりETHを獲得する可能性を秘めます。
 
-
+### Active Offline
+ACTIVEになったにも関わらずバリデータが2epoch=12.8minの間オフライン状態になりブロックの提案や証明を行っていない状態です。
 
 ### Exiting Online
-### Exiting Offline
-### Slashing Online
-### Slashing Offline
-### Slashed
-### Exited
+下記理由によりバリデータはオンラインだがネットワークから退出している最中の状態です。
+1. Deposit Contractに預けた資金が16ETHを下回り強制退場となった場合（Slashing, Penaltyにより減額され続けた等）
+2. バリデータ側は自主的にステーキングをやめる自主退場の場合
 
+### Exiting Offline
+上記のオフラインバージョンです
+
+### Slashing Online
+バリデータはオンラインですが、悪意のあるペナルティ行為があったため、ネットワークから強制終了された状態です。
+これは1epochないで同じブロックに投票するなどの違反行為をさします。
+
+### Slashing Offline
+上記のオフラインバージョンです。また、バリデータは最低限25分間待機Queueに並ぶことになります。しかしSlashingによりペナルティを受け減額された後ですのでStaking額が減り待機時間は以前よりも長くなります。
+
+### Slashed
+度重なるペナルティを犯した場合、バリデータがネットワークから追い出された状態です。DepositContractに預けた資金は 36 日後に引き出すことができます。
+
+### Exited
+バリデータがネットワークから離脱した状態です。DepositContractに預けた資金は 1 日後に引き出し可能になります。
 
 # Withdraw Credential
 Withdraw CredentialはStakerが32ETHをDeposit Contractに入金する際に指定する引出認証情報です。
