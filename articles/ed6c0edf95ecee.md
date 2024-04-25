@@ -1,17 +1,16 @@
 ---
-title: "【Ethereum Staking】"
+title: "【Ethereum Staking】StakerからDeposit Contractへの入出金プロセス"
 emoji: "🥩"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["ethereum", "crypto"]
 published: false
 ---
 
-# はじめに
-Ethereum Stakingで扱う鍵の役割に関する知見をつけるにあたり最低限必要な理解を行うための記事です。
-各節に出てくるキーワードの詳細な説明は後続の記事で記載していく予定です。
+# TL;DR
+
 
 # 前提知識
-※飛ばしていただいて構いません！
+※Ethereum Stakingで扱う鍵の役割に関する知見をつけるにあたり最低限必要な理解を行うためのセクションですので飛ばしていただいて構いません！
 
 Ethereumが起動した当時はPOWというPCのマシンパワーによって数あてゲームの勝者となるためのマイナーが存在していましたが、
 電力やネットワーク維持コスト等の課題が多くあり電力供給量が不安定であるためにネットワーク全体が安定しませんでした。
@@ -98,8 +97,6 @@ partialはポジション（初期投資額32ETH+報酬額）のうち報酬額�
 
 一方でfullはポジション（初期投資額32ETH+報酬額）全額を引き出すことができます。
 バリデータノードが自主的にネットワークから退出する、もしくはSlashingというペナルティを犯した場合に引出鍵へのアクセスが可能となります。
-
-
 
 # ref
 https://kb.beaconcha.in/ethereum-staking/ethereum-2-keys
