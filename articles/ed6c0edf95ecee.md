@@ -204,13 +204,33 @@ commiteeは、ネットワーク伝搬委員会に選出された際に支払わ
 ここまでが、Beacon Chainを認証するPOSの参加者（Validator）の動き
 とそれに対する報酬の整理となる。
 
-
-
-
 https://kb.beaconcha.in/ethereum-staking/attestation
 
+# EL報酬
+ブロックの提案報酬とMEV報酬の2種類が存在する、
+またいずれかの方式を採用するため報酬は片方でしか発生しない。
 
+## ブロックの提案報酬
+ブロックを提案し承認された際に発生する報酬
+1epoch32台のバリデータが選出される、これは1日で7200台の計算
+報酬はtx作成者が指定したガス代の優先手数料から得ることができる
 
+1epochには32slotあり、
+mempoolに滞留したtxが抽出され
+各スロットのブロックへと内包されていく
+
+この内包されていったブロック内のtxを
+proposerが選択していくのだが、
+これが中央集権的であるという課題がある。
+
+このtxにはtxdata, basegasfee, priority fee
+が詰め込まれておりそのうちpriority feeのがproposerの報酬額となる
+txは複数あるため、tx.priority feeの合計額が報酬額全体となる
+
+## MEV報酬
+proposerがslotにまびくtxを中央集権的に選択するかだいを解決するために、
+選択権力を分散化させ、得られるgasfeeを最大化するための
+MEVBOOSTと呼ばれる仕組みを用いることで得られる報酬
 
 
 
