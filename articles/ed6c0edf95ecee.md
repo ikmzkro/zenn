@@ -123,8 +123,6 @@ Exit Queueの最後尾に並び承認を〇
 通常自主的な退出であれば１日以降で引出可能になる
 Withdraw Queueに入り５日待機するば引き出しが完了する、同じくトランザクション手数料は一切かからない。
 
-
-
 # Stakerへの報酬と罰則
 
 https://kb.beaconcha.in/ethereum-staking/rewards-and-penalties
@@ -132,21 +130,38 @@ https://kb.beaconcha.in/ethereum-staking/rewards-and-penalties
 https://zenn.dev/mizuneko4345/scraps/ca1ba05bf94bce
 
 
+- 報酬とは何が起因で発生するのか
+- Consensu LayerとExecution layerで発生した報酬をそれぞれCL報酬、EL報酬と呼びます。
 
+# CL報酬
+CL報酬は、Attestation報酬、Sync Committee報酬、Proposer報酬の３種類がある
+プロトコルにはGasperを扱う。
+https://ethereum.org/ja/developers/docs/consensus-mechanisms/pos/gasper/
 
+## Attestation
+https://kb.beaconcha.in/ethereum-staking/attestation
 
+1epoch = 約6.4分毎にバリデータはネットワークに認証、正しいブロックの提案を行う。
+このブロックの提案が正しければ責任を負った対価として報酬をいただける。
 
+Consensu Layer(CL)のAttestation報酬はSource、Target、Headに分類される。
+△：Source、Targetは報酬と罰則がついになる、Headには報酬=0であるため罰則という概念がそもそもないらしい
 
+Sourceはぶろっくがならんでいるなかでも前のcheckpointに要因する5slotいないに投票する制限がある。
+Targetは最新のcheckpointで32slotいないに投票する
+HEADは最新のslotで1slotいないに投票する
 
+```
+{Source Vote}{}{}{}{}{}{}{}{} ~
+~{Target Vote}{}{}{}{}{}{Chain head vote}{Chain head vote}{}{}
+```
 
-
-
-
-
-
-
-
-
+## Sync Committee
+ネットワークに参加したバリデータは委員会を作成し
+その委員会に班長が存在する＝Agreegator
+んでAgreegatorはバリデータの投票（どのブロックは正しい）といった内容を
+マージしてネットワークに伝番する役割を担う
+そしてそのなかで１つのバリデータが選ばれブロックを書き込むことができるようになる
 
 
 
