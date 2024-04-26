@@ -163,15 +163,47 @@ HEADは最新のslotで1slotいないに投票する
 マージしてネットワークに伝番する役割を担う
 そしてそのなかで１つのバリデータが選ばれブロックを書き込むことができるようになる
 
+---
 
+1epoch6台まで待機中のvalidatorがネットワークに入ってくる(epoch単位でしかvalidatorは入れない)
+1epoch6台=6minなので、1min1台入るイメージ
+ネットワークにすでに参加している約40万台のvalidatorは
+次のepochに入ってくるvalidatorを乱数を基準にランダムに選択する
 
+これからの1epoch=32slot=32block=6分間を承認する
+validatorがネットワークから選ばれる
 
+validatorはslotの単位に割り当てられる
+各slotにはcommittee(クラス)という単位がある
 
+commitee(クラス)は最低でも128存在している
+1slotあたり最大committeeは64
+担当する台数が1slotあたり1万近く存在する
 
+commiteeの中にも各validatiorの意見をマージしてネットワークに伝搬するagreegator(班長)がいる
+validator Aはブロック正しい、validator Bはブロック間違ってるなどの意見をまとめてる
+この伝搬が遅れれば遅れるほど報酬が下がる
+そして間違ったブロックに繋ぐ=not heaviestと、鎖が繋がっていかないので報酬が下がる
 
+commiteeは、ネットワーク伝搬委員会に選出された際に支払われる報酬
+先頭のブロックヘッダを監視し認証し、そのブロックヘッダに署名を追加する。
+256epoch=27.3hに512validatorが選択される。
+当選されたバリデータはそれ以降の256epochで全slotに投票義務が課せられる
+また、64ヶ月に1度当たる確率らしい
 
+## Proposer
+ブロックを提案し承認された際に支払われる報酬
+1epoch=6.4minあたり12台のバリデータが選出される
+これは1日に3200台選ばれるのと同値で、4ヶ月に一度当選する確率らしい
 
-# Beacon Chainを認証するPOSの参加者（Validator）の動き
+ブロックの提案には失敗という概念は存在せず承認されたかされなかったか
+なので、報酬という概念のみ存在する。違反による罰則は基本ない
+
+1epoch=32soltの各スロットに対してブロックを提案していく
+
+ここまでが、Beacon Chainを認証するPOSの参加者（Validator）の動き
+とそれに対する報酬の整理となる。
+
 
 
 
@@ -222,3 +254,6 @@ https://www.youtube.com/watch?v=RwwU3P9n3uo
 https://kb.beaconcha.in/ethereum-staking/deposit-process
 https://kb.beaconcha.in/ethereum-staking/rewards-and-penalties
 https://kb.beaconcha.in/ethereum-staking/attestation
+https://www.youtube.com/live/BssxTeTwK58?si=MGuaIZEAj0eX8T_a
+
+
