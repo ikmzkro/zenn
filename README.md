@@ -42,6 +42,7 @@ Zennでは下記を消化していく。
 - valueをsolidityに渡す際に16進数にする理由
 - `SlowMist`でのオンチェーン解析
 - Fireblock, Sygna, Chainalysysを用いたカストディシステム構築に向けた要件定義、アーキテクチャ設計ができない
+- AWSのアーキテクチャ設計：https://zenn.dev/iharuoru/articles/630ae2e4d7230d
 ---
 - `Akira`さんのレビューを全て起票する
 - `Naoto Sato`さんのバックエンド実装を参考にして理解度の差分を埋める
