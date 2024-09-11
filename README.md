@@ -62,7 +62,7 @@ Zennでは下記を消化していく。
 - `EIGEN`トークンや`Eigen DA`の解像度がまるで低い
 - `Optimistic Rollup`, `Zk Rollup`がわからない、実装に活かしてガスコストを削減できない
 - `Fireblocks`用の`Azure SGX`環境のアーキテクチャ設計、構築処理
-- `Gnosis Safe`ウォレットの構築
+- `Gnosis Safe`ウォレットのアーキテクチャ設計、構築、責任分界点のスキーム整理などまで行えるか
 ---
 - EigenLayer Hachathon
   - 英語でのプレゼン
